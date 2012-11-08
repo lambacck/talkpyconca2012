@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>Windows Web Deployment: Everything you wanted to know, but were to horrified to ask!</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -35,7 +35,7 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 <div class="slides">
     <section>
-        <h1>windows web deployment:</h1>
+        <h1>Windows Web Deployment:</h1>
 <h2>Everything you wanted to know,<br>but were to horrified to ask!</h2>
 <p>
 <a href="http://whatschrisdoing.com">Christopher Lambacher</a>
@@ -44,27 +44,60 @@
 <br>
 <a href="http://twitter.com/lambacck">@lambacck</a>
 </p>
+<aside class="notes">
+    Hi, I'm Chris Lambacher and I deploy Python based web sites to windows
+    servers. We have 31 python based web applications running on 1 windows
+    server 2003 web server and 2 SQL server database boxes. In October we had
+    648,000 unique visitors and 3.5 million page views. It's not the largest
+    sites on the web, but not the smallest either.
+</aside>
 </section>
         <section>
             <section>
-                <h2>Why would you subject yourself to this torture?<br>
-                </h2>
+                <h2>Why would you subject yourself to this torture?</h2>
+                <aside class="notes">
+                    Many people wonder why we are using Windows and there are a
+                    bunch of possible answers.
+                </aside>
             </section>
             <section>
                 <h2>You like pain!</h2>
                 <img src="img/tough-cat-eats.jpg">
+
+                <aside class="notes">
+                    Most Unix devs look at you like you were about to do this
+                    when you tell them you deploy to Windows.
+                </aside>
             </section>
             <section>
                 <h2>You want to be different than the cool Python kids?</h2>
                 <img src="img/one-of-these-things.jpg">
+                <aside class="notes">
+                    ... and sometimes if feels like you are the only one who
+                    uses or deploys to Windows. Though the windows version
+                    download numbers from python.org and the number of requests
+                    for deployment info on IRC say differently.
+                </aside>
             </section>
             <section>
                 <h2>your IT department tells you that this is a MICROSOFT shop?</h2>
                 <img src="img/microsoft_store.jpg">
+                <aside class="notes">
+                    Maybe your IT department won't let you deploy to Linux,
+                    even though you *know* they have a couple of Red-Hat boxes
+                    stashed in the back.
+                </aside>
             </section>
             <section>
                 <h2>you have 200,000 lines of Classic ASP that you need to port but can't do it over night!</h2>
                 <img src="img/teach_old_dog_new_tricks.PNG">
+                <aside class="notes">
+                    In my case I have a large legacy application that is slowly
+                    being ported. We share Python code between the pure python
+                    part of the application and the Classic ASP paet and call
+                    into it from VBScript. Catch me in the halls if you want to
+                    talk about that.
+                </aside>
             </section>
         </section>
         <section>
@@ -73,18 +106,45 @@
             <p>Make your app work first,&nbsp;</p>
             <img src="img/i_dont_always_deploy.jpg">
             <p>then work on deployment!</p>
+            <aside class="notes">
+                Before you start on deployment you need an application. I can't
+                believe the number of people who come into IRC and ask about
+                deployment specifics before writing one line of code for their
+                app.  But I agree, deployment is much more interesting than
+                whatever they are supposed to be getting done.
+            </aside>
         </section>
         <section>
         <section>
             <h2>Web Servers</h2>
+            <ul>
+                <li>Front End</li>
+                <li>WSGI</li>
+            </ul>
+            <aside class="notes">
+                There are two kinds of web servers for us to discuss, front end
+                and WSGI. Depending on your deployment strategy you may not
+                need a separate WSGI server because you will use WSGI embedded
+                in your front end server.
+            </aside>
         </section>
         <section>
             <h3>Front End</h3>
             <ul>
                 <li>IIS</li>
                 <li>Apache</li>
-                <li style="text-decoration: line-through;">NGINX</li>
+                <li class="fragment" style="text-decoration: line-through;">NGINX</li>
             </ul>
+            <aside class="notes">
+                Apache and IIS are the big fish for front end web servers on
+                Windows.<br><br>NGINX is big on Posix systems and there is some
+                kind of port in progress, but it is not ready for prime time.
+                You may have constraints that dictate which one of these you
+                can pick. I used to recommend Apache, but in IIS 7 and later things
+                significantly better. We're running Windows server 2003 so only
+                have IIS 6, we run Apache up front and Reverse Proxy back to
+                IIS and Python apps.
+            </aside>
         </section>
         <section>
             <h3>WSGI</h3>
@@ -93,25 +153,64 @@
                 <li><a href="http://pypi.python.org/pypi/waitress">Waitress</a></li>
                 <li><a href="http://www.cherrypy.org/">CherryPy</a></li>
                 <li><a href="http://http://twistedmatrix.com">Twisted</a> (no Python 3 &emdash; yet)</li>
-                <li style="text-decoration: line-through;"><a href="http://uwsgi-docs.readthedocs.org/en/latest/">uWSGI</a></li>
-                <li style="text-decoration: line-through;"><a href="http://gunicorn.org/">Gunicorn</a></li>
-            </ul>
+                <li class="fragment" style="text-decoration: line-through;"><a href="http://uwsgi-docs.readthedocs.org/en/latest/">uWSGI</a></li>
+                <li class="fragment" style="text-decoration: line-through;"><a href="http://gunicorn.org/">Gunicorn</a></li>
+                <li class="fragment" style="text-decoration: line-through;"><a href="http://pypi.python.org/pypi/Spawning">Spawning</a></li>
+                <li class="fragment">etc...</li>
+            <ul>
+            <aside class="notes">
+                If your font end server reverse proxies, that is generates a
+                new http request, back to your python application for your
+                dynamic content, then you'll want one of these guys. I supposed
+                Django has a development server too, I just don't know anything about Django.
+                Paste was the default server Pylons/Pyraimd/Turbogears 2 frameworks,
+                but it does not have Python 3 support and I don't think anyone is going to
+                step up to provide it. Waitress is the development server that comes with Pyramid 
+                since Pyramid grew Python 3 support. Though we used Pyramid, we still use the Paste server.
+                CherryPy has a well regarded WSGI server. Twisted also has a good
+                WSGI server that can push tasks back to a thread pool so it looks like any of these other servers.
+                <br>
+                <br>
+                Then there are the non-Windows compatible very popular servers.
+                These things use fork and signals to do the nice things the do.
+                It's a pitty I can't use them, they look nifty.
+            </aside>
         </section>
         </section>
         <section>
                 <section>
                     <h2>Reverse proxy</h2>
                     <ul>
-                        <li>Load balancing / multiple processes<br>
-                        </li>
+                        <li>Load balancing with multiple processes</li>
                         <li>No fighting permissions</li>
                         <li>With multiple applications can restart just one</li>
                     </ul>
+                    <aside class="notes">
+                        You'll need to decide between an Reverse proxy or in
+                        server strategy. I'm currently using reverse proxy for
+                        my deployment.
+                        <br>
+                        <br>
+                        If you wanted to do in server with IIS 7 you would need
+                        to handle how it by default creates a user per
+                        application pool and make sure the users have access to
+                        your app, virtualenvs, etc
+                        <br>
+                        <br>
+                        We run 30ish sites on one box and get enough traffic
+                        that Apache can no-longer do a graceful shut down. We
+                        can update and restart one app at a time because they
+                        all have separate services rather than being all in Apache.
+                    </aside>
                 </section>
                 <section>
-                    <h3>Apache</h3>Everything comes built in<br>
-                        <img src="img/crazy-swiss-army-knife.jpg">
-                        <br>
+                    <h3>Apache</h3>
+                    <p>Comes Fully Loaded</p>
+                    <p><img src="img/crazy-swiss-army-knife.jpg"></p>
+                    <aside class="notes">
+                        Apache comes with everything you need to do a reverse
+                        proxy setup. Though it can be a bit unwieldy
+                    </aside>
                     </section>
                     <section>
                         <h3>IIS</h3>
@@ -120,75 +219,279 @@
                             <li>
                                 <a href="http://www.iis.net/learn/extensions/url-rewrite-module/reverse-proxy-with-url-rewrite-v2-and-application-request-routing">IIS 7+ have official MS extensions</a>
                             </li>
-                            <li>Older IIS takes more work or $</li>
-                                                </ul>
-                                                <br>
-                                                <ul>
-                            <li>
-                                <a href="http://www.helicontech.com/">HeliconTech</a>
-                            </li>
-                            <li>
-                                <a href="http://www.codeplex.com/IIRF">Ionic's Isapi Rewrite Filter</a>
-                            </li>
-                            
+                            <li>Older IIS takes more work or $
+                            <ul>
+                                <li>
+                                    <a href="http://www.codeplex.com/IIRF">Ionic's Isapi Rewrite Filter</a> (IIRF)
+                                </li>
+                                <li>
+                                    <a href="http://www.helicontech.com/">HeliconTech</a>
+                                </li>
+                            </ul>
                         </ul>
+                    <aside class="notes">
+                        IIS Needs some more help. If you are on IIS 7+ there are extensions from Microsoft that can be bent into a reverse proxy setup.
+                        <br>
+                        <br>
+                        If you are using an older IIS or just like the solution
+                        better, you can use the open source Ionic's Isapi
+                        Rewrite Filter which also has reverse proxy.
+                        HeliconTech also has a bunch of for pay options. If
+                        IIRF did reverse proxy when we set up these boxes, I
+                        might have picked it over Apache. 
+                        <br>
+                        <br>
+                        HeliconTech's stuff also looks really good, I'm just cheap.
+                        <br>
+                        <br>
+                        There are probably other things. I'm not an IIS expert, I just do this for my day job.
+                    </aside>
                     </section>
                 </section>
                 <section>
                     <section>
                     <h2>In Server</h2>
-                </section>
-                <section>
-                    <h2>Apache</h2>
                     <ul>
-                        <li>
-                            <a href="http://code.google.com/p/modwsgi/">mod_wsgi</a>
-                        </li>
+                        <li>Web server manages processes</li>
+                        <li>Web server manages communication</li>
+                        <li>Lower communication overhead (maybe)</li>
                     </ul>
-                </section>
-                <section>
-                    <h2>IIS</h2>
-                    <ul>
-                        <li>
-                            <a href="http://code.google.com/p/isapi-wsgi/">ISAPI-WSGI</a>
-                        </li>
-                        <li>
-                            <a href="http://sourceforge.net/apps/trac/pyisapie">PyISAPIe</a>
-                        </li>
-                        <li>
-                            <a href="http://pypi.python.org/pypi/iiswsgi">iiswsgi</a>
-                            <br>
-                        </li>
-                    </ul>
-                </section>
-            </section>
+                    <aside class="notes">
+                        I think the big win here is process and communication
+                        management. Hopefully these take less time to configure
+                        and are less painful than Windows services.
+                    </aside>
+                    </section>
                     <section>
-                        <h2>Windows Services</h2>
+                        <h2>Apache</h2>
+                        <ul>
+                            <li> <a href="http://code.google.com/p/modwsgi/">mod_wsgi</a> </li>
+                        </ul>
+                        <p> <img src="img/TheOneRing.jpg"> </p>
+                    <aside class="notes">
+                        mod_wsgi is the thing to use in-process with Apache.
+                        There are some caveats for use on Windows. You can't
+                        use Daemon mode but apparently it gives each site it's
+                        own python interpreter so your not fighting the GIL with other
+                        sites. (oh sorry I invoked the G word)
+                    </aside>
+                    </section>
+                    <section>
+                        <h2>IIS</h2>
                         <ul>
                             <li>
-                                <a href="http://sourceforge.net/projects/pywin32/">PyWin32</a>
+                                <a href="http://code.google.com/p/isapi-wsgi/">ISAPI-WSGI</a>
                             </li>
                             <li>
-                                <a href="http://pypi.python.org/pypi/wsgisvc">wsgisvc</a>
+                                <a href="http://sourceforge.net/apps/trac/pyisapie">PyISAPIe</a>
+                            </li>
+                            <li>
+                                <a href="http://pypi.python.org/pypi/iiswsgi">iiswsgi</a>
+                                <br>
                             </li>
                         </ul>
-                        <p>
-                        <br>
-                    </p>
-                    <ul>
-                        <li>
-                            <a href="http://rozanski.org.uk/services">srvstart</a>
-                        </li>
-                        <li>
-                            <a href="http://support.microsoft.com/kb/137890">srvany</a>
-                            <br>
-                        </li>
-                    </ul>
+                    <aside class="notes">
+                        I did some early testing with ISAPI-WSGI and it seemed
+                        to work. It is based on the ISAPI support in Pywin32.
+                        PyISAPIe is supposed to be focused around speed (aren't
+                        we all) but I don't know that it is quite as straight
+                        forward to configure.
+                        <br><br>
+                        iiswsgi is new (like 2 weeks new) and looks very
+                        promising if you happen to be running IIS 7+. It uses 
+                        the IIS 7 built in FastCGI support so gives you an
+                        external process controlled by IIS. (Now we can feel
+                        cool like the PHP kids).
+                    </aside>
+                    </section>
                 </section>
                 <section>
-                    <h2>PITFALLS</h2>
+                    <h2>Windows Services</h2>
+                    <ul>
+                        <li>
+                            <a href="http://sourceforge.net/projects/pywin32/">PyWin32</a>
+                        </li>
+                        <li>
+                            <a href="http://pypi.python.org/pypi/wsgisvc">wsgisvc</a>
+                        </li>
+                    </ul>
+                    <p>
+                    <br>
+                    </p>
+                <ul>
+                    <li>
+                        <a href="http://support.microsoft.com/kb/137890">srvany</a>
+                    </li>
+                    <li>
+                        <a href="http://rozanski.org.uk/services">srvstart</a>
+                    </li>
+                </ul>
+                    <aside class="notes">
+                        If you are working with a reverse proxy or no front end
+                        web server (yes you can do that). Then you'll probably
+                        want your application to start with the computer.
+                        That's handle on Windows by services. You can create
+                        your own services in python with PyWin32. WsgiSvc is a
+                        convenient wrapper (or at least starting point) for paste-deploy
+                        based apps that you want to run in a Windows service. I'm running 
+                        a modified version.
+
+                        You can also wrap a command line app with srvany or
+                        srvstart. Srvany is from Microsoft srvstart is much more 
+                        powerful allow separate commands for the start and stop
+                        events.
+                    </aside>
+            </section>
+            <section>
+                <section>
                     <img src="img/Problems.jpg">
+                    <aside class="notes">
+                        Okay now you have some tools to slay the Windows deployment dragons, what problems might arise?
+                    </aside>
                 </section>
+                <section>
+                    <h2>Fork</h2>
+                    <img src="img/tux-fork.gif">
+                    <p>Also, signals.</p>
+                    <aside class="notes">
+                        It seems like people who start on a posix system think
+                        that fork is the solution to every daemon problem.
+                        Python has subprocess to manage new processes in a way
+                        that works cross-platform. I'd also like to see people try to 
+                        use multiprocessing, but my attempts ended in failure do to 
+                        problems with Python 2 and passing sockets to other processes.
+                        That seems to be fixed in Python 3 so, there's hope for the future.
+                        <br>
+                        <br>
+                        Also, it seems like Windows has signals. These are just
+                        here to fool you. Beware and use some other kind of
+                        notification mechanism.
+                    </aside>
+                </section>
+                <section>
+                    <h2>Packaging</h2>
+                    <ul>
+                        <li><a href="http://www.pip-installer.org/">pip</a> only installs from source so you also need a compiler</li>
+                        <li><a href="http://www.python.org/dev/peps/pep-0427/">wheel package format</a> may fix that soon</li>
+                        <li><a href="http://pypi.python.org/pypi/distribute">easy_install</a> has fewer niceties but supports binary packages. It will work for now</li>
+                        <li>Be careful about combining pip and easy_install, they install things differently and can get in each others way</li>
+                    </ul>
+                    <aside class="notes">
+                        There have been a bunch of people beating the use pip
+                        drum for installing packages. They are not wrong,
+                        except that they are. As soon as you need a C extension
+                        you run into problems because pip only installs from
+                        source so you need a compiler.
+                        <br><br>
+                        Many python developers don't know anything about C and
+                        compilers and linkers. And trying to give them succinct instructions about
+                        getting those things installed on Windows in the right version for their
+                        particular installed version of python. Oh and installing visual studio
+                        on a production server. It's madness. Better stick to easy_install,
+                        it will work with the pre-compiled version that the extension writer
+                        has for download and you won't have to think about it any more.
+                    </aside>
+                </section>
+                <section>
+                    <h2>py2exe</h2>
+                    <ul>
+                        <li><a href="http://www.py2exe.org/">py2exe</a> gives you an executable that runs one Python program</li>
+                        <li>Does not always play nice <a href="http://packages.python.org/distribute/">setuptools/distribute</a> and entry_points</li>
+                        <li>Put your package on the file system and not in the library.zip it gives you to avoid problems</li>
+                    </ul>
+                    <aside class="notes">
+                        If you are writing something to be installed by someone else, you might want to cut down on the dependencies they need
+                        to install by using py2exe. py2exe can be finicky with eggs (that's what easy_install installs) and they won't actually be 
+                        eggs anymore so you might have problems with entry_points. I have had success by excluding packages from zip it creates for 
+                        its code library and shipping an egg directory for the main app.
+                    </aside>
+                </section>
+                <section>
+                    <h2>Virtualenv</h2>
+                    <li>Use them</li>
+                    <li>Nicer to use with virtualenvwrapper which is *nix only
+                        <ul>
+                            <li><a href="http://pypi.python.org/pypi/virtualenvwrapper-win">virtualenvwrapper-win</a>: a port to .bat scripts</li>
+                            <li><a href="http://pypi.python.org/pypi/virtualenvwrapper-powershell">virtualenvwrapper-powershell</a>: a port to PowerShell</li>
+                        </ul>
+                    </li>
+                    <li>Use the <a href="http://pypi.python.org/pypi/virtualenv#using-virtualenv-without-bin-python">activate_this</a> script to activate in a service (or Classic ASP)</li>
+                    <aside class="notes">
+                        virtualenv is a nice way to get virtual python
+                        environments so that you can keep apps with different
+                        dependencies from stepping on each others toes. You
+                        should use them. They are even nicer with virtualenvwrapper
+                        which gives a bunch of helpers for activating, creating, deleting
+                        and otherwise managing environments really easy. The orriginal
+                        virtualenvwrapper is bash scripts so not very useful from 
+                        the Windows command prompt, but there are a couple of ports,
+                        one to batch scripts, virtualenvwrapper-win, and one to powershell,
+                        virtualenvwrapper-powershell.
+                        <br><br>
+                        Also, you can activate a virtualenv from running code, you want to do it as early as possible
+                        in the lifetime of your application, but you can do it for instance when your pywin32 based
+                        service starts up. It is the activate_this script and is in the docs for virtualenv.
+                        It also works within classic asp if you are so inclined.
+                    </aside>
+                </section>
+                <section>
+                    <h2>Temporary Key Value Stores</h2>
+                    <li>You're probably going to find this one the hardest</li>
+                    <li><a href="http://memcached.org/">Memcached</a> is installed as part of a <a href="http://www.couchbase.com/">Couchbase</a> install, but you <em>really</em> need to do connection pooling on a high traffic site</li>
+                    <li><a href="http://redis.io/">Redis</a> has no production ready Windows support</li>
+                    <li class="fragment">We Use Redis in a Linux VM hosted on a Windows server</li>
+                    <aside class="notes">
+                        Caching and sessions see a lot of storage in memory
+                        based key value stores. The most common of these are
+                        Memcached and Redis.  You can get memcached installed
+                        when you install the community version of couchbase and
+                        it comes with a nice monitoring app, but I found that
+                        the memcached libraries that were compatible with
+                        Windows masked connection errors with key not found
+                        (i.e. None). If you have a reasonably high amount of traffic
+                        you want a connection pool.
+                        Redis clients have a connection pool, but there is no production ready redis
+                        port for Windows. Our solution was to put Redis in
+                        Linux on a VM (dirty secret, the host is also the web
+                        box and we don't notice the load, it is 1 or 2 percent under heavy load)
+                    </aside>
+                </section>
+            </section>
+
+            <section>
+                <p>
+                    <a href="http://whatschrisdoing.com">Christopher Lambacher</a>
+                    <br>
+                    <a href="http://kclsoftware.com">KCL Custom Software</a>
+                    <br>
+                    <a href="http://twitter.com/lambacck">@lambacck</a>
+                </p>
+            </section>
+            <section>
+                <h1>Questions?</h1>
+            </section>
+            <section>
+                <h2>Extra Resources</h2>
+                <ul>
+                    <li><a href="http://www.lfd.uci.edu/~gohlke/pythonlibs/">Unofficial Windows Binaries for Python Extension Packages</a></li>
+                    <li><a href="http://bpython-interpreter.org/">bpython</a> works on Windows with the ncurses download from ^^</li>
+                    <li><a href="https://gist.github.com/1419507">My tests with multiprocessing and sharing sockets between processes</a>: Works on py3 not on py2</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Picture Credits</h2>
+                <ul>
+                    <li>Tough Cat Eats Pain For Breakfast: http://cheezburger.com/570458880</li>
+                    <li>One Of These Things Is Not Like The Others: http://cheezburger.com/3297005312</li>
+                    <li>Microsoft Store: http://gizmodo.com</li>
+                    <li>Old Dog New Tricks Philosoraptor: http://www.quickmeme.com/meme/35o4c5/</li>
+                    <li>I Don't Always Deploy Software: http://memegenerator.net/instance/29594266</li>
+                    <li>Crazy Swiss Army Knife: http://8bit.io/frustrate/</li>
+                    <li>The One Ring: http://lotr.wikia.com/wiki/One_Ring</li>
+                    <li>Problems: http://despair.com/problems.html</li>
+                    <li>Tux Fork: http://www.yolinux.com/TUTORIALS/ForkExecProcesses.html</li>
+                </ul>
+            </section>
             </div>
 
 		</div>
