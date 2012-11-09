@@ -201,7 +201,7 @@
                 pool so that it looks like any of these other servers. 
                 <br><br>
                 There are a number of other popular options out there in this
-                space that are not Windows compatible. They can use fork and
+                space that are not Windows compatible. They use fork and
                 signals to do the nice things they do. It's a pity I can't use
                 them - they look nifty.
             </aside>
@@ -386,8 +386,9 @@
                     <aside class="notes">
                         <p>
                             It seems like people who start on a POSIX system think
-                            that fork is the solution to every daemon problem.
-                            Python has subprocess to manage new processes in a way
+                            that fork is the solution to every process problem.
+                            Please, if you are writing new tools, Python has
+                            subprocess to manage new processes in a way
                             that works cross-platform. 
                         </p>
                         <p>
@@ -424,14 +425,15 @@
                         </p>
                         <p>
                             Some python developers don't know anything about C
-                            and compilers and linkers. Try to give them
+                            and compilers and linkers. Trying to give them
                             succinct instructions about getting those things
                             installed on Windows in the right version for their
-                            particular installed version of python. Oh, and
+                            particular installed version of Python is hard. Oh, and
                             installing Visual Studio on a production server.
                             It's madness. Better stick to easy_install: it will
                             "just work" with the pre-compiled version that the
-                            package author provided.
+                            package author provided, even the windows installer
+                            exes.
                         </p>
                     </aside>
                 </section>
