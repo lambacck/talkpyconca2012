@@ -390,13 +390,11 @@
                             problem.  Please, if you are writing new tools,
                             Python has subprocess to manage new processes in a
                             way that works cross-platform. I'd also like to see
-                            tools using Multiprocessing. 
-                            <!--I even tried to get
-                            something going, but the examples in the docs did
-                            not work in Python 2 on windows. It seems you can't
-                            share a socket with another process. Almost the
-                            same code works totally fine on Python 3 so time to
-                            port right? -->
+                            tools using Multiprocessing, though I don't think
+                            this is going to provide good solutions for windows
+                            until people move to Python 3. There seems to be some
+                            problems with Python2 and Windows and sharing sockets
+                            between processes.
                         </p>
                     </aside>
                 </section>
@@ -411,7 +409,6 @@
                             and they don't include the ones all the POSIX applications want
                             to use. Even the ones that are supposed to work 
                             don't work quite like they do on POSIX.
-                            
                             <br><br>
                             Beware and use some other kind of notification
                             mechanism.
