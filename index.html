@@ -40,7 +40,7 @@
         href="http://kclsoftware.com">KCL Custom Software</a> <br>
     <a href="http://twitter.com/lambacck">@lambacck</a> </p> 
 <aside class="notes">
-    Hi, I'm Chris Lambacher, and I deploy Python-based web sites to Windows
+    Hi, I'm Chris Lambacher, and I deploy Python-based web applications to Windows
     servers. We currently support 31 python-based web applications running on
     one windows server 2003 R2 machine. The audience of the sites is primarily
     Canadian, and in October we had 648,000 unique visitors and 3.5 million
@@ -69,8 +69,8 @@
                 <h2>You want to be different than the cool Python kids?</h2>
                 <img src="img/one-of-these-things.jpg">
                 <aside class="notes">
-                    ... and sometimes if feels like you are the only one who
-                    uses or deploys to Windows. But there are lots of us.
+                    ... and sometimes it feels like you are the only one who
+                    uses or deploys to Windows. But there are, in fact, lots of us.
                 </aside>
             </section>
             <section>
@@ -83,24 +83,25 @@
                 </aside>
             </section>
             <section>
-                <h2>you have 200,000 lines of Classic ASP that you need to port but can't do it over night!</h2>
+                <h2>You have 200,000 lines of Classic ASP that you need to port!</h2>
                 <img src="img/teach_old_dog_new_tricks.PNG">
                 <aside class="notes">
-                    In my case, I have a large legacy application that is
-                    slowly being ported from Classic ASP and VBScript. The
-                    fully-ported part is now a Pyramid application, but there
-                    is still a large body of code in Classic ASP. We have
-                    managed to configure the application to use a common Python
-                    library shared between the Classic ASP and Pyramid-based
-                    parts that handles things like security and overall page
-                    layout. 
+                    In 2010, a non-profit we develop for received grant funding to move their large
+                    Classic ASP application into something more sustainable. Unfortunately, in the
+                    2 years between the original grant application and when it was approved, the
+                    application had grown so large that it could no longer be fully converted using
+                    the grant funds. Luckily, we discovered ways to help us do the port slowly.
+                    Part of the application is now fully ported into Pyramid, but there is still a
+                    large body of code in Classic ASP. We have a common Python library used by both
+                    the Classic ASP and Pyramid-based parts of the application that handles various
+                    kinds of shared functionality including security and overall page layout.
                 </aside>
             </section>
         </section>
         <section>
             <h2>First Rule Of Deployment Club<br>
             </h2>
-            <p>Make your app work first,<br>
+            <p>Make your application work first,<br>
             then work on deployment!</p>
             <img src="img/i_dont_always_deploy.jpg">
             <aside class="notes">
@@ -124,9 +125,9 @@
             <aside class="notes">
                 There are two main deployment strategies: Embed in the Web
                 Server, and Reverse Proxy. Embed in the Web Server is the
-                PHP-type model, where your app runs as part of a big web server
+                PHP-type model, where your application runs as part of a big web server
                 like Apache. The Reverse Proxy strategy is where Apache
-                generates a new HTTP request to your app when it gets a request
+                generates a new HTTP request to your application when it gets a request
                 that maps to one of your dynamic pages.
                 <br><br>
                 If you have a low traffic intranet site, you may be able to get away with just
@@ -167,7 +168,7 @@
                 and whistles, but in IIS 7 and later things got significantly
                 better on the IIS front. We're running Windows server 2003 and
                 only have IIS 6, so we run Apache up front and Reverse Proxy
-                back to IIS and Python apps.
+                back to IIS and Python applications.
             </aside>
         </section>
         <section>
@@ -202,8 +203,8 @@
                 <br><br>
                 There are a number of other popular options out there in this
                 space that are not Windows compatible. They use fork and
-                signals to do the nice things they do. It's a pity I can't use
-                them - they look nifty.
+                signals to do the nice things they do, which Windows doesn't
+                support. It's a pity I can't use them - they look nifty.
             </aside>
         </section>
         </section>
@@ -360,11 +361,11 @@
                         <p>
                             You can create your own services in python with
                             PyWin32. WsgiSvc is a convenient wrapper (or at
-                            least starting point) for paste-deploy based apps
+                            least starting point) for paste-deploy based applications
                             that you want to run in a Windows service. 
                         </p>
                         <p>
-                            You can also wrap a command line app with srvany or
+                            You can also wrap a command line application with srvany or
                             srvstart. Srvany is from Microsoft. srvstart is
                             much more powerful, and allows separate commands
                             for start and stop events.
@@ -382,19 +383,37 @@
                 <section>
                     <h2>Fork</h2>
                     <img src="img/tux-fork.gif">
-                    <p>Also, signals.</p>
                     <aside class="notes">
                         <p>
-                            It seems like people who start on a POSIX system think
-                            that fork is the solution to every process problem.
-                            Please, if you are writing new tools, Python has
-                            subprocess to manage new processes in a way
-                            that works cross-platform. 
+                            It seems like people who start on a POSIX system
+                            think that fork is the solution to every process
+                            problem.  Please, if you are writing new tools,
+                            Python has subprocess to manage new processes in a
+                            way that works cross-platform. I'd also like to see
+                            tools using Multiprocessing. 
+                            <!--I even tried to get
+                            something going, but the examples in the docs did
+                            not work in Python 2 on windows. It seems you can't
+                            share a socket with another process. Almost the
+                            same code works totally fine on Python 3 so time to
+                            port right? -->
                         </p>
+                    </aside>
+                </section>
+                <section>
+                    <h2>Signals</h2>
+                    <img src="img/Atrapitis.gif">
+                    <aside class="notes">
                         <p>
                             Another similar problem is signals; it seems like
                             Windows has them, but they are just here to fool
-                            you. Beware and use some other kind of notification
+                            you. There is only support for a couple of the signals
+                            and they don't include the ones all the POSIX applications want
+                            to use. Even the ones that are supposed to work 
+                            don't work quite like they do on POSIX.
+                            
+                            <br><br>
+                            Beware and use some other kind of notification
                             mechanism.
                         </p>
                     </aside>
@@ -413,15 +432,15 @@
                                 <li>has fewer niceties, but supports binary packages</li>
                                 <li>will work for now!</li>
                             </ul>
-                        <li>Be careful about combining pip and easy_install, they install things differently and can get in each others way</li>
+                        <li>Be careful about combining pip and easy_install, they handle namespace packages differently and can get in each others way</li>
                     </ul>
                     <aside class="notes">
                         <p>
                             Many people beat the “use pip” drum for installing
                             packages. They are not wrong, except that they are.
                             As soon as you need a C extension, you run into
-                            problems because pip only installs from source so
-                            you need a compiler. 
+                            problems because pip only installs packages from
+                            source so you need a compiler. 
                         </p>
                         <p>
                             Some python developers don't know anything about C
@@ -434,6 +453,22 @@
                             "just work" with the pre-compiled version that the
                             package author provided, even the windows installer
                             exes.
+                        </p>
+                        <p>
+                            Also look for the wheel package format. It is in
+                            the process of being standardized and there is an
+                            experimental version of pip with support. Hopefully
+                            we'll start seeing this in use soon.
+                        </p>
+                        <p>
+                            I have sometimes combined the wonders of pip and
+                            easy_install, but it is dangerous. If you install
+                            packages that share a namespace with the two
+                            different tools, you are going to run into import
+                            problems. Best not to mix them no matter how
+                            tempting, but if you must, force an import of the
+                            easy_installed package first. That often makes 
+                            things work.
                         </p>
                     </aside>
                 </section>
@@ -455,7 +490,7 @@
                             eggs any more. I have had success by excluding
                             packages from the zip it creates for its code
                             library, and shipping an egg directory for the main
-                            app.
+                            application.
                         </p>
                     </aside>
                 </section>
@@ -472,7 +507,7 @@
                         <li>Use the <a href="http://pypi.python.org/pypi/virtualenv#using-virtualenv-without-bin-python">activate_this</a> script to activate in a service (or Classic ASP)</li>
                     </ul>
                     <aside class="notes">
-                        virtualenv helps you to keep apps with different
+                        virtualenv helps you to keep applications with different
                         dependencies from stepping on each other’s toes through
                         the creation of virtual python environments. You should
                         use them. They are even nicer with virtualenvwrapper,
@@ -501,15 +536,26 @@
                     <aside class="notes">
                         Caching and sessions are often stored in memory-based key value stores, most
                         commonly Memcached and Redis. You can get Memcached installed when you install
-                        the community version of Couchbase, and it comes with a nice monitoring app,
+                        the community version of Couchbase, and it comes with a nice monitoring application,
                         but I found that the Memcached libraries that were compatible with Windows
                         masked connection errors with key not found (i.e. None). If you have a
                         reasonably high amount of traffic, you want a connection pool. Redis clients
                         have a connection pool, but there is no production-ready Redis port for
-                        Windows. After Memcached became overwhelmed by our increasing traffic load, our
-                        solution was to put Redis in Linux on a VM. A dirty little secret: the host is
-                        also the web box, and the load is insignificant at only 1 or 2 percent CPU
-                        under heavy traffic.
+                        Windows. 
+                        <br><br>
+                        After Memcached became overwhelmed by our increasing traffic load, our solution
+                        was to put Redis in Linux on a VM. After moving to Redis, we started getting
+                        errors that we tracked down to being a problem with opening too many connections
+                        to Redis too quickly. Windows by default has a low limit on the number of
+                        outgoing connections it can initiate and our request rate + the TIME_WAIT Delay
+                        meant that these ports were being exhausted when attempting to connect to the
+                        Memcached or Redis servers.  We ended up staying with Redis since it came with
+                        a connection pool that limited the number of open connections to a reasonable
+                        level.
+                        <br><br>
+                        A dirty little secret: the Redis Virtual Machine is
+                        running on the web box, and the load is insignificant
+                        at only 1 or 2 percent CPU under heavy traffic.
                     </aside>
                 </section>
             </section>
